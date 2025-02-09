@@ -9,7 +9,7 @@ interface ProgramsGameProps {
 
 export default function ProgramsGame({ onComplete }: ProgramsGameProps) {
   const [programs, setPrograms] = useState([1, 2, 3, 4, 5]);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null) as React.MutableRefObject<HTMLDivElement>;
 
   const handleProgramClose = (id: number) => {
     setPrograms(prev => prev.filter(programId => programId !== id));
