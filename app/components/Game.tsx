@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import MiniGame from './MiniGame';
+import VictoryAnimation from './VictoryAnimation';
 
 interface Room {
   id: string;
@@ -343,12 +344,17 @@ export default function Game() {
         return 'thermostat';
       case 7:
         return 'battery';
+      case 8:
+        return 'sprinkler';
       default:
         return 'wifi';
     }
   };
 
   const room = rooms[currentRoom];
+
+  // Add check for game completion
+  const isGameComplete = rooms.every(room => room.isCompleted);
 
   return (
     <div className={`crt-screen ${!isPowered ? 'power-off' : ''}`}>
@@ -374,70 +380,66 @@ export default function Game() {
 
       <div className="tv-inner">
         <div style={{ fontSize: `${fontSize}rem` }}>
-          {/* <h1 
-            className="glitch-text" 
-            data-text="Grandma's Smart Home Adventure"
-            style={{ textAlign: 'center', marginBottom: '2rem' }}
-          >
-            Grandma's Smart Home Adventure
-          </h1> */}
-          
-          <div className="room">
-            {showMiniGame ? (
-              <MiniGame 
-                type={getMiniGameType()} 
-                onComplete={handleMiniGameComplete}
-              />
-            ) : (
-              <>
-                <h2 className="glitch-text" data-text={room.name}>{room.name}</h2>
-                <p style={{ margin: '1rem 0' }}>{room.description}</p>
-                
-                <div style={{ margin: '2rem 0' }}>
-                  <h3>{room.puzzle.question}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', margin: '1rem 0' }}>
-                    {room.puzzle.options.map((option, index) => (
-                      <button
-                        key={index}
-                        className="button"
-                        onClick={() => handleAnswer(index)}
-                        disabled={room.isCompleted}
-                      >
-                        {option}
-                      </button>
-                    ))}
+          {isGameComplete ? (
+            <VictoryAnimation />
+          ) : (
+            <div className="room">
+              {showMiniGame ? (
+                <MiniGame 
+                  type={getMiniGameType()} 
+                  onComplete={handleMiniGameComplete}
+                />
+              ) : (
+                <>
+                  <h2 className="glitch-text" data-text={room.name}>{room.name}</h2>
+                  <p style={{ margin: '1rem 0' }}>{room.description}</p>
+                  
+                  <div style={{ margin: '2rem 0' }}>
+                    <h3>{room.puzzle.question}</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', margin: '1rem 0' }}>
+                      {room.puzzle.options.map((option, index) => (
+                        <button
+                          key={index}
+                          className="button"
+                          onClick={() => handleAnswer(index)}
+                          disabled={room.isCompleted}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {feedback && (
-                  <div style={{ 
-                    margin: '1rem 0', 
-                    padding: '1rem', 
-                    border: '2px dashed var(--crt-text)',
-                    animation: 'fadeIn 0.3s ease-in'
-                  }}>
-                    <p>{feedback}</p>
+                  {feedback && (
+                    <div style={{ 
+                      margin: '1rem 0', 
+                      padding: '1rem', 
+                      border: '2px dashed var(--crt-text)',
+                      animation: 'fadeIn 0.3s ease-in'
+                    }}>
+                      <p>{feedback}</p>
+                    </div>
+                  )}
+
+                  {showTip && (
+                    <div style={{ margin: '1rem 0', padding: '1rem', border: '2px dashed var(--crt-text)' }}>
+                      <h3>Tech Tip Unlocked!</h3>
+                      <p>{room.puzzle.tip}</p>
+                      {currentRoom < rooms.length - 1 && (
+                        <button className="button" onClick={nextRoom}>
+                          Next Room
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                    <p>Score: {score} / {rooms.length}</p>
                   </div>
-                )}
-
-                {showTip && (
-                  <div style={{ margin: '1rem 0', padding: '1rem', border: '2px dashed var(--crt-text)' }}>
-                    <h3>Tech Tip Unlocked!</h3>
-                    <p>{room.puzzle.tip}</p>
-                    {currentRoom < rooms.length - 1 && (
-                      <button className="button" onClick={nextRoom}>
-                        Next Room
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                  <p>Score: {score} / {rooms.length}</p>
-                </div>
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

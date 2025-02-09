@@ -9,9 +9,10 @@ import TimezoneGame from './minigames/TimezoneGame';
 import DoorGame from './minigames/DoorGame';
 import ThermostatGame from './minigames/ThermostatGame';
 import BatteryGame from './minigames/BatteryGame';
+import SprinklerGame from './minigames/SprinklerGame';
 
 interface MiniGameProps {
-  type: 'wifi' | 'radio' | 'lightbulb' | 'programs' | 'timezone' | 'door' | 'thermostat' | 'battery';
+  type: 'wifi' | 'radio' | 'lightbulb' | 'programs' | 'timezone' | 'door' | 'thermostat' | 'battery' | 'sprinkler';
   onComplete: () => void;
 }
 
@@ -33,5 +34,7 @@ export default function MiniGame({ type, onComplete }: MiniGameProps) {
       return <ThermostatGame onComplete={onComplete} />;
     case 'battery':
       return <BatteryGame onComplete={onComplete} />;
+    case 'sprinkler':
+      return <SprinklerGame onComplete={onComplete} />;
   }
 } 

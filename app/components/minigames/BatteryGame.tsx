@@ -8,7 +8,7 @@ interface BatteryGameProps {
 
 export default function BatteryGame({ onComplete }: BatteryGameProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const [batteryRotation, setBatteryRotation] = useState(0);
+  const [batteryRotation, setBatteryRotation] = useState(180);
   const [batteryPosition, setBatteryPosition] = useState({ x: 50, y: 200 });
   const [isCorrect, setIsCorrect] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });

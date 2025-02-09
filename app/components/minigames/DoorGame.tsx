@@ -7,10 +7,10 @@ interface DoorGameProps {
 }
 
 export default function DoorGame({ onComplete }: DoorGameProps) {
-  const [doorOpen, setDoorOpen] = useState(45); // Changed from 100 to 45 degrees
+  const [doorOpen, setDoorOpen] = useState(75); // Changed from 100 to 45 degrees
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef<number | null>(null);
-  const doorStartPosition = useRef<number>(45); // Also update initial ref position
+  const doorStartPosition = useRef<number>(75); // Also update initial ref position
 
   const handleDragStart = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -22,7 +22,7 @@ export default function DoorGame({ onComplete }: DoorGameProps) {
     if (!isDragging || dragStartX.current === null) return;
 
     const dragDistance = dragStartX.current - e.clientX;
-    const newPosition = Math.max(0, Math.min(45, doorStartPosition.current + (dragDistance / 3)));
+    const newPosition = Math.max(0, Math.min(75, doorStartPosition.current + (dragDistance / 3)));
     setDoorOpen(newPosition);
 
     if (newPosition <= 5) {
@@ -36,7 +36,7 @@ export default function DoorGame({ onComplete }: DoorGameProps) {
     setIsDragging(false);
     if (doorOpen > 5) {
       // Door swings back to halfway if not closed enough
-      setDoorOpen(45);
+      setDoorOpen(75);
     }
   };
 
