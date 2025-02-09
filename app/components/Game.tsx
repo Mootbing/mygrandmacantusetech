@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import MiniGame from './MiniGame';
 
 interface Room {
   id: string;
@@ -257,6 +258,7 @@ export default function Game() {
   const [feedback, setFeedback] = useState<string>('');
   const [fontSize, setFontSize] = useState<number>(1);
   const [isPowered, setIsPowered] = useState(true);
+  const [showMiniGame, setShowMiniGame] = useState(false);
 
   const handleAnswer = (answerIndex: number) => {
     const room = rooms[currentRoom];
@@ -265,8 +267,8 @@ export default function Game() {
       newRooms[currentRoom].isCompleted = true;
       setRooms(newRooms);
       setScore(score + 1);
-      setShowTip(true);
       setFeedback('');
+      setShowTip(true);
     } else {
       setFeedback(room.puzzle.wrongAnswerResponses[answerIndex]);
       const roomElement = document.querySelector('.room') as HTMLElement;
@@ -278,8 +280,8 @@ export default function Game() {
 
   const nextRoom = () => {
     if (currentRoom < rooms.length - 1) {
-      setCurrentRoom(currentRoom + 1);
       setShowTip(false);
+      setShowMiniGame(true);
       setFeedback('');
     }
   };
@@ -318,6 +320,34 @@ export default function Game() {
     setIsPowered(!isPowered);
   };
 
+  const handleMiniGameComplete = () => {
+    setShowMiniGame(false);
+    setCurrentRoom(currentRoom + 1);
+  };
+
+  const getMiniGameType = () => {
+    switch (currentRoom) {
+      case 0:
+        return 'wifi';
+      case 1:
+        return 'radio';
+      case 2:
+        return 'lightbulb';
+      case 3:
+        return 'programs';
+      case 4:
+        return 'timezone';
+      case 5:
+        return 'door';
+      case 6:
+        return 'thermostat';
+      case 7:
+        return 'battery';
+      default:
+        return 'wifi';
+    }
+  };
+
   const room = rooms[currentRoom];
 
   return (
@@ -353,51 +383,60 @@ export default function Game() {
           </h1> */}
           
           <div className="room">
-            <h2 className="glitch-text" data-text={room.name}>{room.name}</h2>
-            <p style={{ margin: '1rem 0' }}>{room.description}</p>
-            
-            <div style={{ margin: '2rem 0' }}>
-              <h3>{room.puzzle.question}</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', margin: '1rem 0' }}>
-                {room.puzzle.options.map((option, index) => (
-                  <button
-                    key={index}
-                    className="button"
-                    onClick={() => handleAnswer(index)}
-                    disabled={room.isCompleted}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {showMiniGame ? (
+              <MiniGame 
+                type={getMiniGameType()} 
+                onComplete={handleMiniGameComplete}
+              />
+            ) : (
+              <>
+                <h2 className="glitch-text" data-text={room.name}>{room.name}</h2>
+                <p style={{ margin: '1rem 0' }}>{room.description}</p>
+                
+                <div style={{ margin: '2rem 0' }}>
+                  <h3>{room.puzzle.question}</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', margin: '1rem 0' }}>
+                    {room.puzzle.options.map((option, index) => (
+                      <button
+                        key={index}
+                        className="button"
+                        onClick={() => handleAnswer(index)}
+                        disabled={room.isCompleted}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-            {feedback && (
-              <div style={{ 
-                margin: '1rem 0', 
-                padding: '1rem', 
-                border: '2px dashed var(--crt-text)',
-                animation: 'fadeIn 0.3s ease-in'
-              }}>
-                <p>{feedback}</p>
-              </div>
-            )}
-
-            {showTip && (
-              <div style={{ margin: '1rem 0', padding: '1rem', border: '2px dashed var(--crt-text)' }}>
-                <h3>Tech Tip Unlocked!</h3>
-                <p>{room.puzzle.tip}</p>
-                {currentRoom < rooms.length - 1 && (
-                  <button className="button" onClick={nextRoom}>
-                    Next Room
-                  </button>
+                {feedback && (
+                  <div style={{ 
+                    margin: '1rem 0', 
+                    padding: '1rem', 
+                    border: '2px dashed var(--crt-text)',
+                    animation: 'fadeIn 0.3s ease-in'
+                  }}>
+                    <p>{feedback}</p>
+                  </div>
                 )}
-              </div>
-            )}
 
-            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-              <p>Score: {score} / {rooms.length}</p>
-            </div>
+                {showTip && (
+                  <div style={{ margin: '1rem 0', padding: '1rem', border: '2px dashed var(--crt-text)' }}>
+                    <h3>Tech Tip Unlocked!</h3>
+                    <p>{room.puzzle.tip}</p>
+                    {currentRoom < rooms.length - 1 && (
+                      <button className="button" onClick={nextRoom}>
+                        Next Room
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                  <p>Score: {score} / {rooms.length}</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
