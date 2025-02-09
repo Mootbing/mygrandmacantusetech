@@ -18,21 +18,23 @@
 body {
   background: #121212;
   color: var(--crt-text);
-  min-height: 100vh;
+  /* min-height: 100vh;
+  height: 100vh; */
+  margin: 25;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 0;
 }
 
 .crt-screen {
   position: relative;
   width: 100%;
-  max-width: 800px;
-  height: 80vh;
+  height: 94vh;
+  max-width: none;
   background: var(--tv-frame);
-  padding: 3rem;
-  border-radius: 20px;
+  padding: 2rem;
+  border-radius: 0;
   box-shadow: 
     inset 0 0 0 8px var(--tv-border),
     0 0 50px rgba(0, 0, 0, 0.5);
@@ -45,7 +47,7 @@ body {
   padding: 2rem;
   border-radius: 100px / 15px;
   overflow-y: auto;
-  height: 100%;
+  height: calc(100% - 4rem);
   box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
   /* Hide scrollbar but keep functionality */
   scrollbar-width: none; /* Firefox */
